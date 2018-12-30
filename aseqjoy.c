@@ -150,12 +150,15 @@ void loop()
 
 		switch(js.type & ~JS_EVENT_INIT) {		
 			case JS_EVENT_BUTTON:
-				if (js.value) {			
-					current_channel=js.number+1;
-				
-					if (verbose) {
-						printf("Switched to MIDI channel %i.\n", current_channel);
-					}
+				snd_seq_event_output_direct(seq_handle, &ev);
+
+				snd_seq_ev_set_fixed(&ev);
+				ev.data.control.channel=9;
+				ev.data.control.param=values[js.number].controller;
+				ev.data.control.value=js.value;
+
+				if (verbose) {
+   				    printf("js.number: %u, js.value: %d\n", js.number, js.value);
 				}
 			break;
 			
